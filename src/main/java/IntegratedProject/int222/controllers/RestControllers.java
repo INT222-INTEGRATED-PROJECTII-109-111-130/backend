@@ -1,5 +1,6 @@
 package IntegratedProject.int222.controllers;
 
+import IntegratedProject.int222.exception.MessageException;
 import IntegratedProject.int222.models.*;
 import IntegratedProject.int222.repositories.*;
 import IntegratedProject.int222.uploadfiles.StorageFileNotFoundException;
@@ -83,7 +84,7 @@ public class RestControllers {
     }
     /* GET */
     @GetMapping("/showallaccount")
-    public List<Accounts> showAcc() {
+    public List<Accounts> showAcc() throws RuntimeException {
         return  accRepo.findAll();
     }
 
@@ -109,10 +110,18 @@ public class RestControllers {
         System.out.println(allPC.get(prodcolorRepo.findAll().size()-1).getProductcolorId());
         return  prodcolorRepo.findAll();
     }
-
     @GetMapping("/showallproduct")
     public List<Products> showProd() {
         return  prodRepo.findAll();
+    }
+
+    @GetMapping("/show1prod/{id}")
+    public Products s1pord(@PathVariable long id){
+        if (prodRepo.findById(id).orElse(null) == null ){
+            throw  new MessageException("id: "+ id + " does not exist !!");
+        }
+        Products p =  prodRepo.findById(id).get();
+        return p;
     }
     /* END */
     /* POST */
