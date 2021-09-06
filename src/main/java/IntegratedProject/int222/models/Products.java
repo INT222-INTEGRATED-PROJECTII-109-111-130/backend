@@ -12,7 +12,6 @@ public class Products {
   private java.sql.Date onsaleDate;
   private double productPrice;
   private String productImage;
-  private String productSize;
   private long brandId;
 
   @ManyToOne
@@ -24,6 +23,9 @@ public class Products {
 
   @OneToMany(mappedBy = "products")
   List<Cart> carts;
+
+  @OneToMany(mappedBy = "products")
+  List<Productsize> productsizes;
 
   public Brands getBrands() {
     return brands;
@@ -87,15 +89,6 @@ public class Products {
   }
 
 
-  public String getProductSize() {
-    return productSize;
-  }
-
-  public void setProductSize(String productSize) {
-    this.productSize = productSize;
-  }
-
-
   public long getBrandId() {
     return brandId;
   }
@@ -103,5 +96,10 @@ public class Products {
   public void setBrandId(long brandId) {
     this.brandId = brandId;
   }
+
+  public List<Productsize> getProductsizes() {
+    return productsizes;
+  }
+
 
 }

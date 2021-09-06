@@ -33,7 +33,12 @@ public class RestControllers {
     private ProductcolorRepository prodcolorRepo;
     @Autowired
     private ProductsRepository prodRepo;
-
+    /* ยังไม่ได้ทำ method RESTAPI */
+    @Autowired
+    private ProductsizeRepository prodsizeRepo;
+    @Autowired
+    private SizeRepository sizeRepo;
+    /* END */
     final StorageService storageService;
 
     @Autowired
