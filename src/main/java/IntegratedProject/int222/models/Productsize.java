@@ -1,9 +1,6 @@
 package IntegratedProject.int222.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Productsize {
@@ -22,7 +19,7 @@ public class Productsize {
   }
 
   @ManyToOne
-  @JoinColumn(name = "sizeId", insertable=false, updatable=false)
+  @JoinColumn(name = "sizeId",insertable=false, updatable=false)
   Size sizes;
 
   @ManyToOne

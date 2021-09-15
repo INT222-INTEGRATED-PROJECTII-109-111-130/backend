@@ -1,0 +1,14 @@
+version: '2'
+services:
+    hello-docker:
+        build: .
+        image: backend-docker
+        volumes:
+            - /home/producthosts/back-end/public:/tmp
+        ports:
+            - "3000:3000"
+        restart: on-failure
+networks:
+        default:
+            external:
+                name: circlenet

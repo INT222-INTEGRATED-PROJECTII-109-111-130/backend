@@ -28,6 +28,9 @@ public class Cart {
     this.cartId = cartId;
   }
 
+  public Products getProducts() {
+    return products;
+  }
 
   public long getAccountId() {
     return accountId;

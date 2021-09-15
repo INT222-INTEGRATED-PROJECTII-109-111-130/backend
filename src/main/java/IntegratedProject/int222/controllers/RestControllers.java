@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,8 @@ public class RestControllers {
     private SizeRepository sizeRepo;
     /* END */
     final StorageService storageService;
-
+    public long idsize;
+    public long idprodc;
     @Autowired
     public RestControllers(StorageService storageService) {
         this.storageService = storageService;
@@ -109,6 +111,11 @@ public class RestControllers {
         return  colorRepo.findAll();
     }
 
+    @GetMapping("/showallsize")
+    public List<Size> showSize(){
+        return sizeRepo.findAll();
+    }
+
     @GetMapping("/showallprodcolor")
     public List<Productcolor> showProdColor() {
         System.out.println(prodcolorRepo.findAll().size());
@@ -131,6 +138,12 @@ public class RestControllers {
     }
     /* END */
     /* POST */
+
+    @PostMapping("/register")
+    public void register(@RequestParam("account") String[] account){
+
+    }
+
     @PostMapping("/addbrand")
     public void addBrand(@RequestBody Brands bname) {
         brandRepo.save(bname);
@@ -158,25 +171,33 @@ public class RestControllers {
         prodcolorRepo.save(prodColor);
     }
 
+
+
     @PostMapping("/addprod")
     public void addProd(@RequestParam("prod") String produc
                         ,@RequestParam("prodcolor") String[] prodcolor
-                        ,@RequestParam("file") MultipartFile file){
+                        ,@RequestParam("file") MultipartFile file
+                        ,@RequestParam("size") String[] size){
         Products product ;
         try {
+            storageService.store(file);
             ObjectMapper objectMapper = new ObjectMapper();
             product = objectMapper.readValue(produc, Products.class);
+            product.setProductId(prodRepo.findAll().get(prodRepo.findAll().size()-1).getProductId()+1);
             prodRepo.save(product);
             for (int i = 0; i < prodcolor.length; i = ++i) {
-//                System.out.println(i);
-//                System.out.println(Long.parseLong(prodcolor[i]));
-//                System.out.println(Long.parseLong(prodcolor[i+1]));
-                Productcolor productcolor = new Productcolor(Long.parseLong(prodcolor[i]),product.getProductId(),Long.parseLong(prodcolor[++i]));
+                this.idprodc = prodcolorRepo.findAll().size()-1 == -1? 700001: prodcolorRepo.findAll().get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1;
+                Productcolor productcolor = new Productcolor(this.idprodc,product.getProductId(),Long.parseLong(prodcolor[i]));
                 prodcolorRepo.save(productcolor);
             }
-            storageService.store(file);
+
+            for (int i = 0; i < size.length; i = ++i) {
+                this.idsize = prodsizeRepo.findAll().size()-1 == -1? 900001: prodsizeRepo.findAll().get(prodsizeRepo.findAll().size()-1).getProductsizeId()+1;
+                Productsize products = new Productsize(this.idsize,product.getProductId(),Long.parseLong(size[i]));
+                prodsizeRepo.save(products);
+            }
         }catch (IOException err){
-            System.out.printf("Error",err.toString());
+            throw  new MessageException(err.getMessage());
         }
     }
     /* END*/
@@ -201,6 +222,122 @@ public class RestControllers {
                 brand.setBrandName(b.getBrandName());
                 brandRepo.save(brand);
             }
+        }
+
+        @PutMapping("/editprod")
+        @Transactional
+        public void editProd(@RequestParam("prod") String produc
+                ,@RequestParam("prodcolor") String[] prodcolornew
+                ,@RequestParam("file") MultipartFile file
+                ,@RequestParam("size") String[] sizenew){
+            Products editproduct ;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                editproduct = objectMapper.readValue(produc, Products.class);
+                //product.setProductId(prodRepo.findAll().get(prodRepo.findAll().size()-1).getProductId()+1);
+                //prodRepo.save(product);
+
+                Products haveproduct = prodRepo.findById(editproduct.getProductId()).orElse(null);
+                if(haveproduct != null){
+                    /*edit image*/
+                    System.out.println(haveproduct.getProductImage());
+                    System.out.println(file.getOriginalFilename());
+                    if(haveproduct.getProductImage() != file.getOriginalFilename()) {
+
+                        storageService.delete(haveproduct.getProductImage());
+                        storageService.store(file);
+                    }
+                    /*edit product*/
+                    haveproduct.setProductName(editproduct.getProductName());
+                    haveproduct.setProductDescription(editproduct.getProductDescription());
+                    haveproduct.setOnsaleDate(editproduct.getOnsaleDate());
+                    haveproduct.setProductPrice(editproduct.getProductPrice());
+                    haveproduct.setProductImage(editproduct.getProductImage());
+                    haveproduct.setBrandId(editproduct.getBrandId());
+                    prodRepo.save(haveproduct);
+
+                    Productcolor[] prodColor = prodcolorRepo.findAllByProductId(haveproduct.getProductId());
+                    int lengthcolor = prodColor.length;
+                    for (int i = 0; i < lengthcolor; i++) {
+                        System.out.println(prodColor[0].getProductId());
+                        prodcolorRepo.deleteByProductId(prodColor[0].getProductId());
+                    }
+                    Productsize[] sizeold = prodsizeRepo.findAllByProductId(haveproduct.getProductId());
+                    int lengthsize = sizeold.length;
+                    for (int i = 0; i < lengthsize; i++) {
+                        prodsizeRepo.deleteByProductId(sizeold[0].getProductId());
+                    }
+                    for (int i = 0; i < prodcolornew.length; i = ++i) {
+                        this.idprodc = prodcolorRepo.findAll().size()-1 == -1? 700001: prodcolorRepo.findAll().get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1;
+                        Productcolor productcolor = new Productcolor(this.idprodc,haveproduct.getProductId(),Long.parseLong(prodcolornew[i]));
+                        prodcolorRepo.save(productcolor);
+                    }
+                    for (int i = 0; i < sizenew.length; i = ++i) {
+                        this.idsize = prodsizeRepo.findAll().size()-1 == -1? 900001: prodsizeRepo.findAll().get(prodsizeRepo.findAll().size()-1).getProductsizeId()+1;
+                        Productsize products = new Productsize(this.idsize,haveproduct.getProductId(),Long.parseLong(sizenew[i]));
+                        prodsizeRepo.save(products);
+                    }
+                    /*edit productcolor*/
+//                    if(prodColor.length == prodcolornew.length){
+//                        for (int i = 0; i < prodColor.length; i++) {
+//                            prodColor[i].setColorId(Long.parseLong(prodcolornew[i]));
+//                            prodcolorRepo.save(prodColor[i]);
+//                        }
+//                    }else if(prodColor.length > prodcolornew.length){
+//                        int diff = prodColor.length - prodcolornew.length;
+//                        for (int j = 0; j < diff; j++) {
+//                            prodcolorRepo.deleteById(prodColor[prodColor.length - 1].getProductcolorId());
+//                        }
+//                        for (int i = 0; i < prodcolornew.length; i++) {
+//                            prodColor[i].setColorId(Long.parseLong(prodcolornew[i]));
+//                        }
+//                    } else if( prodColor.length < prodcolornew.length){
+//                        int dif = prodcolornew.length - prodColor.length ;
+//                        for (int i = 0; i < prodcolornew.length; i++) {
+//                            prodColor[i].setColorId(Long.parseLong(prodcolornew[i]));
+//                        }
+//                        for (int j = 0; j < dif; j++) {
+//                            List<Productcolor> allPC = prodcolorRepo.findAll();
+//                            Productcolor prodcolor = new Productcolor(allPC.get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1,prodColor[0].getProductId(),Long.parseLong(prodcolornew[j]));
+//                            prodcolorRepo.save(prodcolor);
+//                        }
+//                    }
+
+                    /*edit productsize*/
+//                    Productsize[] sizeold = prodsizeRepo.findAllByProductId(haveproduct.getProductId());
+//                    if(sizeold.length == sizenew.length){
+//                        for (int i = 0; i < sizeold.length; i++) {
+//                            sizeold[i].setProductsizeId(Long.parseLong(sizenew[i]));
+//                            prodsizeRepo.save(sizeold[i]);
+//                        }
+//                    }else if(sizeold.length > sizenew.length){
+//                        int diff = sizeold.length - sizenew.length;
+//                        for (int j = 0; j < diff; j++) {
+//                            prodsizeRepo.deleteById(sizeold[sizeold.length - 1].getProductsizeId());
+//                        }
+//                        for (int i = 0; i < sizenew.length; i++) {
+//                            sizeold[i].setProductsizeId(Long.parseLong(sizenew[i]));
+//                        }
+//                    } else if( sizeold.length < sizenew.length){
+//                        int dif = sizenew.length - sizeold.length ;
+//                        for (int i = 0; i < sizenew.length; i++) {
+//                            sizeold[i].setProductsizeId(Long.parseLong(sizenew[i]));
+//                        }
+//                        for (int j = 0; j < dif; j++) {
+//                            List<Productsize> allPC = prodsizeRepo.findAll();
+//                            Productsize prodsize = new Productsize(allPC.get(prodsizeRepo.findAll().size()-1).getProductsizeId()+1,sizeold[0].getProductId(),Long.parseLong(sizenew[j]));
+//                            prodsizeRepo.save(prodsize);
+//                        }
+//                    }
+
+
+                }else{
+                    throw  new MessageException(" not have product id "+editproduct.getProductId()+" in database");
+                }
+            }catch (IOException err){
+                throw  new MessageException(err.getMessage());
+            }
+
         }
 
         @PutMapping("/updateprod")
@@ -245,6 +382,7 @@ public class RestControllers {
 
                 }
             }
+
         }
 
 
@@ -291,14 +429,25 @@ public class RestControllers {
         }
         /* ทำเรื่องถ้าจะลบแล้วยังมีสินค้าอยู่ในตะกร้า */
         @DeleteMapping("/delprod/{id}")
-        public void deleteProductById(@PathVariable long id){
+        public void deleteProductById(@PathVariable long id) throws IOException {
             Productcolor[] prodColor = prodcolorRepo.findAllByProductId(id);
             Cart[] cart = cartRepo.findAllByProductId(id);
+            Productsize[] prodsize = prodsizeRepo.findAllByProductId(id);
+            Products prod = prodRepo.findById(id).orElse(null);
+            if(prod != null){
+                storageService.delete(prod.getProductImage());
+            }else{
+                throw new MessageException("does not have id : "+id);
+            }
+
             for (int i = 0; i < cart.length; i++) {
                 cartRepo.deleteById(cart[i].getCartId());
             }
             for (int i = 0; i < prodColor.length; i++) {
                 prodcolorRepo.deleteById(prodColor[i].getProductcolorId());
+            }
+            for (int i = 0; i < prodsize.length; i++) {
+                prodsizeRepo.deleteById(prodsize[i].getProductsizeId());
             }
             prodRepo.deleteById(id);
         }

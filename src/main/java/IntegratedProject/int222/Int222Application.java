@@ -15,10 +15,11 @@ public class Int222Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Int222Application.class, args);
 	}
-	@Bean
-	CommandLineRunner init(StorageService storageService) {
-		return (args) -> {
-			storageService.deleteAll();
-			storageService.init();
-		};}
+//	@Bean
+//	CommandLineRunner init(StorageService storageService) {
+//		return (args) -> {
+//			storageService.deleteAll();
+//			storageService.init();
+//		};
+//	}
 }

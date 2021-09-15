@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductcolorRepository extends JpaRepository<Productcolor, Long> {
 
     Productcolor[] findAllByProductId(Long longs);
-
+    void deleteByProductId(Long longs);
 
 
 

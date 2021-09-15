@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductsizeRepository extends JpaRepository<Productsize,Long> {
     Productsize[] findAllByProductId(Long longs);
+    void deleteByProductId(Long longs);
 
 }
