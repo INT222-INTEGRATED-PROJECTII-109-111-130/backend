@@ -15,8 +15,21 @@ public class Accounts {
   private String password;
   private String accountRole;
 
+  public Accounts(long accountId, String firstName, String lastName, String email, String password, String accountRole) {
+    this.accountId = accountId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+    this.accountRole = accountRole;
+  }
+
   @OneToMany(mappedBy = "accounts")
   List<Cart> carts;
+
+  public Accounts() {
+
+  }
 
   public List<Cart> getCarts() {
     return carts;

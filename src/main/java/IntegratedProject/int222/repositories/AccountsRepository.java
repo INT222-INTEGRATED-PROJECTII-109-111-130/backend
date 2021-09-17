@@ -4,4 +4,5 @@ import IntegratedProject.int222.models.Accounts;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
+    Accounts findByEmail(String s);
 }

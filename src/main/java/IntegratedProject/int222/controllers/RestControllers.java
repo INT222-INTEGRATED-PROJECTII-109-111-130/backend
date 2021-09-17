@@ -5,6 +5,7 @@ import IntegratedProject.int222.models.*;
 import IntegratedProject.int222.repositories.*;
 import IntegratedProject.int222.uploadfiles.StorageFileNotFoundException;
 import IntegratedProject.int222.uploadfiles.StorageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -43,6 +44,7 @@ public class RestControllers {
     final StorageService storageService;
     public long idsize;
     public long idprodc;
+    public long idacc;
     @Autowired
     public RestControllers(StorageService storageService) {
         this.storageService = storageService;
@@ -101,9 +103,12 @@ public class RestControllers {
         return  brandRepo.findAll();
     }
 
-    @GetMapping("/showallcart")
-    public List<Cart> showCart() {
-        return  cartRepo.findAll();
+    @GetMapping("/showcart/{id}")
+    public Cart[] showCart(@PathVariable long id) {
+        if( cartRepo.findAllByAccountId(id) == null){
+            throw  new MessageException("id : "+ id + " does not have product in cart !!");
+        }
+        return  cartRepo.findAllByAccountId(id);
     }
 
     @GetMapping("/showallcolor")
@@ -139,10 +144,10 @@ public class RestControllers {
     /* END */
     /* POST */
 
-    @PostMapping("/register")
-    public void register(@RequestParam("account") String[] account){
-
-    }
+//    @PostMapping("/register")
+//    public void register(@RequestParam("account") String[] account){
+//
+//    }
 
     @PostMapping("/addbrand")
     public void addBrand(@RequestBody Brands bname) {
@@ -157,12 +162,25 @@ public class RestControllers {
     /* ยังไม่เสร็จ เช็คเงื่อนไขว่มีซ้ำไหม */
     @PostMapping("/addaccount")
     public void addAccount(@RequestBody Accounts acc) {
-        accRepo.save(acc);
+        if(accRepo.findByEmail(acc.getEmail()).getEmail() == acc.getEmail() ){
+            throw  new MessageException("Is have already email exist");
+        }else {
+
+            this.idacc = accRepo.findAll().size()-1 == -1? 300001: accRepo.findAll().get(accRepo.findAll().size()-1).getAccountId()+1;
+            Accounts accnew = new Accounts(this.idacc,acc.getFirstName(),acc.getLastName(),acc.getEmail(),acc.getPassword(),acc.getAccountRole());
+
+            accRepo.save(accnew);
+        };
+
+
+
     }
     /* END */
 
     @PostMapping("/addcart")
     public void addCart(@RequestBody Cart cart) {
+        cart.setCartId(cart.getCartId() == 1 ? cartRepo.findAll().size()-1 == -1? 500001: cartRepo.findAll().get(cartRepo.findAll().size()-1).getCartId()+1 :500001);
+
         cartRepo.save(cart);
     }
 
@@ -200,6 +218,10 @@ public class RestControllers {
             throw  new MessageException(err.getMessage());
         }
     }
+
+
+
+
     /* END*/
 
     /* ยังไม่ได้test */
@@ -405,8 +427,9 @@ public class RestControllers {
         }
 
         @DeleteMapping("/delcart/{id}")
-        public void deleteCartById(@PathVariable long id){
+        public String deleteCartById(@PathVariable long id){
             cartRepo.deleteById(id);
+            return "delete success";
         }
 
         @DeleteMapping("/delcolor/{id}")
