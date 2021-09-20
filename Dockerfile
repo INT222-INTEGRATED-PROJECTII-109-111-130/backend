@@ -1,3 +1,5 @@
+FROM maven AS build
+RUN mvn clean package
 # Use official base image of Java Runtim
 FROM openjdk:16-jdk-alpine
 
@@ -7,7 +9,7 @@ RUN mkdir product-images
 # Make port 8080 available to the world outside container
 EXPOSE 3000
 
-RUN pwd /mvnw package
+#RUN pwd /mvnw package
 
 # Set application's JAR file
 ARG JAR_FILE=target/int222-0.0.1-SNAPSHOT.jar
