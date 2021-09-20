@@ -7,7 +7,7 @@ FROM openjdk:16-jdk-alpine
 
 # Set volume point to /tmp
 VOLUME /tmp
-RUN mkdir product-images
+RUN mkdir ./tmp/product-images
 # Make port 8080 available to the world outside container
 EXPOSE 3000
 
