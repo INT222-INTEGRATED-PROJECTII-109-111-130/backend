@@ -3,6 +3,7 @@
 #RUN  pwd  mvn clean package
 # Use official base image of Java Runtim
 FROM openjdk:16-jdk-alpine
+RUN sudo apt install maven
 RUN mvn -f $PWD/pom.xml clean package
 # Set volume point to /tmp
 VOLUME /tmp
