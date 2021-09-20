@@ -3,7 +3,7 @@
 #RUN  pwd  mvn clean package
 # Use official base image of Java Runtim
 FROM openjdk:16-jdk-alpine
-RUN mvn -f ./pom.xml clean package
+RUN mvn -f $PWD/pom.xml clean package
 # Set volume point to /tmp
 VOLUME /tmp
 RUN mkdir product-images
@@ -13,7 +13,7 @@ EXPOSE 3000
 #RUN pwd /mvnw package
 
 # Set application's JAR file
-ARG JAR_FILE=./target/int222-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=$PWD/target/int222-0.0.1-SNAPSHOT.jar
 
 # Add the application's JAR file to the container
 ADD ${JAR_FILE} app.jar
