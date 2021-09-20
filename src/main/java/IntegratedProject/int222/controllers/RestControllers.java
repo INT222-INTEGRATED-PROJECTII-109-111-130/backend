@@ -5,7 +5,6 @@ import IntegratedProject.int222.models.*;
 import IntegratedProject.int222.repositories.*;
 import IntegratedProject.int222.uploadfiles.StorageFileNotFoundException;
 import IntegratedProject.int222.uploadfiles.StorageService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -94,17 +93,17 @@ public class RestControllers {
     }
     /* GET */
     @GetMapping("/showallaccount")
-    public List<Accounts> showAcc() throws RuntimeException {
+    public List<accounts> showAcc() throws RuntimeException {
         return  accRepo.findAll();
     }
 
     @GetMapping("/showallbrand")
-    public List<Brands> showBrand() {
+    public List<brands> showBrand() {
         return  brandRepo.findAll();
     }
 
     @GetMapping("/showcart/{id}")
-    public Cart[] showCart(@PathVariable long id) {
+    public cart[] showCart(@PathVariable long id) {
         if( cartRepo.findAllByAccountId(id) == null){
             throw  new MessageException("id : "+ id + " does not have product in cart !!");
         }
@@ -112,33 +111,33 @@ public class RestControllers {
     }
 
     @GetMapping("/showallcolor")
-    public List<Colors> showColor() {
+    public List<colors> showColor() {
         return  colorRepo.findAll();
     }
 
     @GetMapping("/showallsize")
-    public List<Size> showSize(){
+    public List<size> showSize(){
         return sizeRepo.findAll();
     }
 
     @GetMapping("/showallprodcolor")
-    public List<Productcolor> showProdColor() {
+    public List<productcolor> showProdColor() {
         System.out.println(prodcolorRepo.findAll().size());
-        List<Productcolor> allPC = prodcolorRepo.findAll();
+        List<productcolor> allPC = prodcolorRepo.findAll();
         System.out.println(allPC.get(prodcolorRepo.findAll().size()-1).getProductcolorId());
         return  prodcolorRepo.findAll();
     }
     @GetMapping("/showallproduct")
-    public List<Products> showProd() {
+    public List<products> showProd() {
         return  prodRepo.findAll();
     }
 
     @GetMapping("/show1prod/{id}")
-    public Products s1pord(@PathVariable long id){
+    public products s1pord(@PathVariable long id){
         if (prodRepo.findById(id).orElse(null) == null ){
             throw  new MessageException("id: "+ id + " does not exist !!");
         }
-        Products p =  prodRepo.findById(id).get();
+        products p =  prodRepo.findById(id).get();
         return p;
     }
     /* END */
@@ -150,24 +149,26 @@ public class RestControllers {
 //    }
 
     @PostMapping("/addbrand")
-    public void addBrand(@RequestBody Brands bname) {
+    public void addBrand(@RequestBody brands bname) {
         brandRepo.save(bname);
     }
 
     @PostMapping("/addcolor")
-    public void addColor(@RequestBody Colors color) {
+    public void addColor(@RequestBody colors color) {
         colorRepo.save(color);
     }
 
     /* ยังไม่เสร็จ เช็คเงื่อนไขว่มีซ้ำไหม */
     @PostMapping("/addaccount")
-    public void addAccount(@RequestBody Accounts acc) {
-        if(accRepo.findByEmail(acc.getEmail()).getEmail() == acc.getEmail() ){
+    public void addAccount(@RequestBody accounts acc) {
+
+
+        if(accRepo.findByEmail(acc.getEmail()).orElse(null) != null && accRepo.findByEmail(acc.getEmail()).orElse(null).getEmail() == acc.getEmail()  ){
             throw  new MessageException("Is have already email exist");
         }else {
 
             this.idacc = accRepo.findAll().size()-1 == -1? 300001: accRepo.findAll().get(accRepo.findAll().size()-1).getAccountId()+1;
-            Accounts accnew = new Accounts(this.idacc,acc.getFirstName(),acc.getLastName(),acc.getEmail(),acc.getPassword(),acc.getAccountRole());
+            accounts accnew = new accounts(this.idacc,acc.getFirstName(),acc.getLastName(),acc.getEmail(),acc.getPassword(),acc.getAccountRole());
 
             accRepo.save(accnew);
         };
@@ -178,14 +179,14 @@ public class RestControllers {
     /* END */
 
     @PostMapping("/addcart")
-    public void addCart(@RequestBody Cart cart) {
+    public void addCart(@RequestBody cart cart) {
         cart.setCartId(cart.getCartId() == 1 ? cartRepo.findAll().size()-1 == -1? 500001: cartRepo.findAll().get(cartRepo.findAll().size()-1).getCartId()+1 :500001);
 
         cartRepo.save(cart);
     }
 
     @PostMapping("/addprodcolor")
-    public void addProdColor(@RequestBody Productcolor prodColor) {
+    public void addProdColor(@RequestBody productcolor prodColor) {
         prodcolorRepo.save(prodColor);
     }
 
@@ -196,22 +197,22 @@ public class RestControllers {
                         ,@RequestParam("prodcolor") String[] prodcolor
                         ,@RequestParam("file") MultipartFile file
                         ,@RequestParam("size") String[] size){
-        Products product ;
+        products product ;
         try {
             storageService.store(file);
             ObjectMapper objectMapper = new ObjectMapper();
-            product = objectMapper.readValue(produc, Products.class);
+            product = objectMapper.readValue(produc, products.class);
             product.setProductId(prodRepo.findAll().get(prodRepo.findAll().size()-1).getProductId()+1);
             prodRepo.save(product);
             for (int i = 0; i < prodcolor.length; i = ++i) {
                 this.idprodc = prodcolorRepo.findAll().size()-1 == -1? 700001: prodcolorRepo.findAll().get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1;
-                Productcolor productcolor = new Productcolor(this.idprodc,product.getProductId(),Long.parseLong(prodcolor[i]));
+                productcolor productcolor = new productcolor(this.idprodc,product.getProductId(),Long.parseLong(prodcolor[i]));
                 prodcolorRepo.save(productcolor);
             }
 
             for (int i = 0; i < size.length; i = ++i) {
                 this.idsize = prodsizeRepo.findAll().size()-1 == -1? 900001: prodsizeRepo.findAll().get(prodsizeRepo.findAll().size()-1).getProductsizeId()+1;
-                Productsize products = new Productsize(this.idsize,product.getProductId(),Long.parseLong(size[i]));
+                productsize products = new productsize(this.idsize,product.getProductId(),Long.parseLong(size[i]));
                 prodsizeRepo.save(products);
             }
         }catch (IOException err){
@@ -227,8 +228,8 @@ public class RestControllers {
     /* ยังไม่ได้test */
         /* PUT */
         @PutMapping("/updateaccount")
-        public void updateAccount(@RequestBody Accounts acc){
-            Accounts account = accRepo.findById(acc.getAccountId()).orElse(null);
+        public void updateAccount(@RequestBody accounts acc){
+            accounts account = accRepo.findById(acc.getAccountId()).orElse(null);
             if(account != null){
                 account.setFirstName(acc.getFirstName());
                 account.setLastName(acc.getLastName());
@@ -238,8 +239,8 @@ public class RestControllers {
         /*method เปลี่ยน pass */
 
         @PutMapping("/updatebrand")
-        public void updateBrand(@RequestBody Brands b){
-            Brands brand = brandRepo.findById(b.getBrandId()).orElse(null);
+        public void updateBrand(@RequestBody brands b){
+            brands brand = brandRepo.findById(b.getBrandId()).orElse(null);
             if(brand != null){
                 brand.setBrandName(b.getBrandName());
                 brandRepo.save(brand);
@@ -252,14 +253,14 @@ public class RestControllers {
                 ,@RequestParam("prodcolor") String[] prodcolornew
                 ,@RequestParam("file") MultipartFile file
                 ,@RequestParam("size") String[] sizenew){
-            Products editproduct ;
+            products editproduct ;
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                editproduct = objectMapper.readValue(produc, Products.class);
+                editproduct = objectMapper.readValue(produc, products.class);
                 //product.setProductId(prodRepo.findAll().get(prodRepo.findAll().size()-1).getProductId()+1);
                 //prodRepo.save(product);
 
-                Products haveproduct = prodRepo.findById(editproduct.getProductId()).orElse(null);
+                products haveproduct = prodRepo.findById(editproduct.getProductId()).orElse(null);
                 if(haveproduct != null){
                     /*edit image*/
                     System.out.println(haveproduct.getProductImage());
@@ -278,25 +279,25 @@ public class RestControllers {
                     haveproduct.setBrandId(editproduct.getBrandId());
                     prodRepo.save(haveproduct);
 
-                    Productcolor[] prodColor = prodcolorRepo.findAllByProductId(haveproduct.getProductId());
+                    productcolor[] prodColor = prodcolorRepo.findAllByProductId(haveproduct.getProductId());
                     int lengthcolor = prodColor.length;
                     for (int i = 0; i < lengthcolor; i++) {
                         System.out.println(prodColor[0].getProductId());
                         prodcolorRepo.deleteByProductId(prodColor[0].getProductId());
                     }
-                    Productsize[] sizeold = prodsizeRepo.findAllByProductId(haveproduct.getProductId());
+                    productsize[] sizeold = prodsizeRepo.findAllByProductId(haveproduct.getProductId());
                     int lengthsize = sizeold.length;
                     for (int i = 0; i < lengthsize; i++) {
                         prodsizeRepo.deleteByProductId(sizeold[0].getProductId());
                     }
                     for (int i = 0; i < prodcolornew.length; i = ++i) {
                         this.idprodc = prodcolorRepo.findAll().size()-1 == -1? 700001: prodcolorRepo.findAll().get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1;
-                        Productcolor productcolor = new Productcolor(this.idprodc,haveproduct.getProductId(),Long.parseLong(prodcolornew[i]));
+                        productcolor productcolor = new productcolor(this.idprodc,haveproduct.getProductId(),Long.parseLong(prodcolornew[i]));
                         prodcolorRepo.save(productcolor);
                     }
                     for (int i = 0; i < sizenew.length; i = ++i) {
                         this.idsize = prodsizeRepo.findAll().size()-1 == -1? 900001: prodsizeRepo.findAll().get(prodsizeRepo.findAll().size()-1).getProductsizeId()+1;
-                        Productsize products = new Productsize(this.idsize,haveproduct.getProductId(),Long.parseLong(sizenew[i]));
+                        productsize products = new productsize(this.idsize,haveproduct.getProductId(),Long.parseLong(sizenew[i]));
                         prodsizeRepo.save(products);
                     }
                     /*edit productcolor*/
@@ -363,8 +364,8 @@ public class RestControllers {
         }
 
         @PutMapping("/updateprod")
-        public void updateProd(@RequestBody Products prod) {
-            Products product = prodRepo.findById(prod.getProductId()).orElse(null);
+        public void updateProd(@RequestBody products prod) {
+            products product = prodRepo.findById(prod.getProductId()).orElse(null);
             if(product != null){
             product.setProductName(prod.getProductName());
             product.setProductDescription(prod.getProductDescription());
@@ -378,7 +379,7 @@ public class RestControllers {
 
         @PutMapping("/updateprodcolor/{id}")
         public void updateProdColor(@PathVariable long id,@RequestParam("prodcolor") String[] prodcol){
-            Productcolor[] prodColor = prodcolorRepo.findAllByProductId(id);
+            productcolor[] prodColor = prodcolorRepo.findAllByProductId(id);
             if(prodColor.length == prodcol.length){
                 for (int i = 0; i < prodColor.length; i++) {
                     prodColor[i].setColorId(Long.parseLong(prodcol[i]));
@@ -398,8 +399,8 @@ public class RestControllers {
                     prodColor[i].setColorId(Long.parseLong(prodcol[i]));
                 }
                 for (int j = 0; j < dif; j++) {
-                    List<Productcolor> allPC = prodcolorRepo.findAll();
-                    Productcolor prodcolor = new Productcolor(allPC.get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1,prodColor[0].getProductId(),Long.parseLong(prodcol[j]));
+                    List<productcolor> allPC = prodcolorRepo.findAll();
+                    productcolor prodcolor = new productcolor(allPC.get(prodcolorRepo.findAll().size()-1).getProductcolorId()+1,prodColor[0].getProductId(),Long.parseLong(prodcol[j]));
                     prodcolorRepo.save(prodcolor);
 
                 }
@@ -412,7 +413,7 @@ public class RestControllers {
         public void updateOneProdColor(@RequestParam Long productcolorId,
     //                                  @RequestParam Long productId,
                                         @RequestParam Long colorId) {
-            Productcolor prodC = prodcolorRepo.findById(productcolorId).orElse(null);
+            productcolor prodC = prodcolorRepo.findById(productcolorId).orElse(null);
             if(prodC != null) {
                 prodC.setColorId(colorId);
                 prodcolorRepo.save(prodC);
@@ -444,7 +445,7 @@ public class RestControllers {
 
         @DeleteMapping("/delaccount/{id}")
         public void deleteAcccountById(@PathVariable long id){
-            Cart[] cart = cartRepo.findAllByAccountId(id);
+            cart[] cart = cartRepo.findAllByAccountId(id);
             for (int i = 0; i < cart.length; i++) {
                 cartRepo.deleteById(cart[i].getCartId());
             }
@@ -453,10 +454,10 @@ public class RestControllers {
         /* ทำเรื่องถ้าจะลบแล้วยังมีสินค้าอยู่ในตะกร้า */
         @DeleteMapping("/delprod/{id}")
         public void deleteProductById(@PathVariable long id) throws IOException {
-            Productcolor[] prodColor = prodcolorRepo.findAllByProductId(id);
-            Cart[] cart = cartRepo.findAllByProductId(id);
-            Productsize[] prodsize = prodsizeRepo.findAllByProductId(id);
-            Products prod = prodRepo.findById(id).orElse(null);
+            productcolor[] prodColor = prodcolorRepo.findAllByProductId(id);
+            cart[] cart = cartRepo.findAllByProductId(id);
+            productsize[] prodsize = prodsizeRepo.findAllByProductId(id);
+            products prod = prodRepo.findById(id).orElse(null);
             if(prod != null){
                 storageService.delete(prod.getProductImage());
             }else{

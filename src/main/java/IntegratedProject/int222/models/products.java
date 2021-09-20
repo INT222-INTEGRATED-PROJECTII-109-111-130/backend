@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Products {
+public class products {
   @Id
   private long productId;
   private String productName;
@@ -16,22 +16,22 @@ public class Products {
 
   @ManyToOne
   @JoinColumn(name = "brandId",insertable=false, updatable=false)
-  Brands brands;
+  IntegratedProject.int222.models.brands brands;
 
   @OneToMany(mappedBy = "products")
-  List<Productcolor> productcolors;
+  List<productcolor> productcolors;
 
   @OneToMany(mappedBy = "products")
-  List<Cart> carts;
+  List<cart> carts;
 
   @OneToMany(mappedBy = "products")
-  List<Productsize> productsizes;
+  List<productsize> productsizes;
 
-  public Brands getBrands() {
+  public IntegratedProject.int222.models.brands getBrands() {
     return brands;
   }
 
-  public List<Productcolor> getProductcolors() {
+  public List<productcolor> getProductcolors() {
     return productcolors;
   }
 
@@ -97,7 +97,7 @@ public class Products {
     this.brandId = brandId;
   }
 
-  public List<Productsize> getProductsizes() {
+  public List<productsize> getProductsizes() {
     return productsizes;
   }
 

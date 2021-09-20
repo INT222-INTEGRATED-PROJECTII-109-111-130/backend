@@ -3,16 +3,16 @@ package IntegratedProject.int222.models;
 import javax.persistence.*;
 
 @Entity
-public class Productsize {
+public class productsize {
   @Id
   private long productsizeId;
   private long productId;
   private long sizeId;
 
-  public Productsize() {
+  public productsize() {
   }
 
-  public Productsize(long productsizeId, long productId, long sizeId) {
+  public productsize(long productsizeId, long productId, long sizeId) {
     this.productsizeId = productsizeId;
     this.productId = productId;
     this.sizeId = sizeId;
@@ -20,13 +20,13 @@ public class Productsize {
 
   @ManyToOne
   @JoinColumn(name = "sizeId",insertable=false, updatable=false)
-  Size sizes;
+  size sizes;
 
   @ManyToOne
   @JoinColumn(name = "productId",insertable=false, updatable=false)
-  Products products;
+  IntegratedProject.int222.models.products products;
 
-  public Size getSizes() {
+  public size getSizes() {
     return sizes;
   }
 

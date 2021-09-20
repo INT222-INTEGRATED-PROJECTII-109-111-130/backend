@@ -1,8 +1,8 @@
 package IntegratedProject.int222.repositories;
 
-import IntegratedProject.int222.models.Accounts;
+import IntegratedProject.int222.models.accounts;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface AccountsRepository extends JpaRepository<Accounts, Long> {
-    Accounts findByEmail(String s);
+import java.util.Optional;
+public interface AccountsRepository extends JpaRepository<accounts, Long> {
+    Optional<accounts>  findByEmail(String s);
 }

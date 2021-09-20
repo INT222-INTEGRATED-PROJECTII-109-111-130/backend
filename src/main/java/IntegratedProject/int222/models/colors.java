@@ -6,14 +6,14 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
-public class Colors {
+public class colors {
   @Id
   private long colorId;
   private String colorName;
   private String colorValue;
 
   @OneToMany(mappedBy = "colors")
-  Set<Productcolor> productcolors;
+  Set<productcolor> productcolors;
 
   public long getColorId() {
     return colorId;

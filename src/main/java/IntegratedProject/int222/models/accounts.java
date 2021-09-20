@@ -6,7 +6,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
-public class Accounts {
+public class accounts {
   @Id
   private long accountId;
   private String firstName;
@@ -15,7 +15,7 @@ public class Accounts {
   private String password;
   private String accountRole;
 
-  public Accounts(long accountId, String firstName, String lastName, String email, String password, String accountRole) {
+  public accounts(long accountId, String firstName, String lastName, String email, String password, String accountRole) {
     this.accountId = accountId;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -25,13 +25,13 @@ public class Accounts {
   }
 
   @OneToMany(mappedBy = "accounts")
-  List<Cart> carts;
+  List<cart> carts;
 
-  public Accounts() {
+  public accounts() {
 
   }
 
-  public List<Cart> getCarts() {
+  public List<cart> getCarts() {
     return carts;
   }
 

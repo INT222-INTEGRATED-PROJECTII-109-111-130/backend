@@ -6,17 +6,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Productcolor {
+public class productcolor {
   @Id
   private long productcolorId;
   private long productId;
   private long colorId;
 
-  public Productcolor() {
+  public productcolor() {
 
   }
 
-  public Productcolor(long productcolorId, long productId, long colorId) {
+  public productcolor(long productcolorId, long productId, long colorId) {
     this.productcolorId = productcolorId;
     this.productId = productId;
     this.colorId = colorId;
@@ -24,13 +24,13 @@ public class Productcolor {
 
   @ManyToOne
   @JoinColumn(name = "colorId", insertable=false, updatable=false)
-  Colors colors;
+  IntegratedProject.int222.models.colors colors;
 
   @ManyToOne
   @JoinColumn(name = "productId",insertable=false, updatable=false)
-  Products products;
+  IntegratedProject.int222.models.products products;
 
-  public Colors getColors() {
+  public IntegratedProject.int222.models.colors getColors() {
     return colors;
   }
 

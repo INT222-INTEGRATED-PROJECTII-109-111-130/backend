@@ -7,7 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Cart {
+public class cart {
   @Id
   private long cartId;
   private long accountId;
@@ -24,11 +24,11 @@ public class Cart {
 
   @ManyToOne
   @JoinColumn(name = "productId",insertable=false, updatable=false)
-  Products products;
+  IntegratedProject.int222.models.products products;
 
   @ManyToOne
   @JoinColumn(name = "accountId",insertable=false, updatable=false)
-  Accounts accounts;
+  IntegratedProject.int222.models.accounts accounts;
 
   public long getCartId() {
     return cartId;

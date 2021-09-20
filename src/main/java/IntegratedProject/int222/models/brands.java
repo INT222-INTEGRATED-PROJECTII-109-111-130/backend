@@ -4,16 +4,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
-import java.util.Set;
 
 @Entity
-public class Brands {
+public class brands {
   @Id
   private long brandId;
   private String brandName;
 
   @OneToMany(mappedBy = "brands")
-  List<Products> products;
+  List<IntegratedProject.int222.models.products> products;
 
 
   public long getBrandId() {

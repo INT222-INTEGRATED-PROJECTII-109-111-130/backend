@@ -1,8 +1,8 @@
 package IntegratedProject.int222.repositories;
 
-import IntegratedProject.int222.models.Products;
+import IntegratedProject.int222.models.products;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductsRepository extends JpaRepository<Products, Long> {
+public interface ProductsRepository extends JpaRepository<products, Long> {
 
 }
