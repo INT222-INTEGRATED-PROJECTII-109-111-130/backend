@@ -1,5 +1,5 @@
 FROM maven AS build
-RUN mvn clean package
+RUN pwd /mvn clean package
 # Use official base image of Java Runtim
 FROM openjdk:16-jdk-alpine
 
