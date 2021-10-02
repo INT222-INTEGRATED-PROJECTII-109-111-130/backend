@@ -180,8 +180,9 @@ public class RestControllers {
 
     @PostMapping("/addcart")
     public void addCart(@RequestBody cart cart) {
-        cart.setCartId(cart.getCartId() == 1 ? cartRepo.findAll().size()-1 == -1? 500001: cartRepo.findAll().get(cartRepo.findAll().size()-1).getCartId()+1 :500001);
-
+        cart.setCartId(cart.getCartId() == 1 ?
+                cartRepo.findAll().size()-1 == -1? 500001:
+                        cartRepo.findAll().get(cartRepo.findAll().size()-1).getCartId()+1 :500001);
         cartRepo.save(cart);
     }
 
