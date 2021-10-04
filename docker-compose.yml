@@ -2,10 +2,9 @@ version: '2'
 services:
     hello-docker:
         container_name: "backend"
-        build: .
-        image: backend-docker
+        image: ghcr.io/violet-evergardenz/int222-backend:latest
         volumes:
-            - /home/producthosts/back-end/public:/tmp
+            - /home/producthosts/back-end/product-images:/tmp
         ports:
             - "3000:3000"
         restart: on-failure
