@@ -5,7 +5,7 @@
 # Use official base image of Java Runtim
 FROM maven AS build
 
-RUN mvn clean package
+RUN mvn  pom.xml clean package
 
 FROM openjdk:16-jdk-alpine
 
