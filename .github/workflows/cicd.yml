@@ -9,6 +9,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - run: docker build -t ghcr.io/violet-evergardenz/backend:master .
+      - run: docker build -t ghcr.io/violet-evergardenz/backend:latest .
       - run: docker images
-      - run: docker push ghcr.io/violet-evergardenz/backend:master
+      - run: docker login -u violet-evergardenz -p ${{secrets.AUTHEN_TOKEN}}
+      - run: docker push ghcr.io/violet-evergardenz/backend:latest
