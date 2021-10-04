@@ -4,7 +4,7 @@
 #RUN  pwd  mvn clean package
 # Use official base image of Java Runtim
 FROM openjdk:16-jdk-alpine
-
+RUN  mvn package
 # Set volume point to /tmp
 VOLUME /tmp
 RUN mkdir ./tmp/product-images
