@@ -7,7 +7,7 @@ FROM maven:3.5.2-jdk-8-alpine AS MAVEN
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
-RUN mvn package
+RUN  mvn clean package
 
 FROM openjdk:16-jdk-alpine
 
