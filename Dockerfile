@@ -15,7 +15,7 @@ FROM openjdk:16-jdk-alpine
 
 VOLUME /tmp
 WORKDIR /tmp
-RUN mkdir ./tmp/product-images
+RUN mkdir /tmp/product-images
 # Make port 8080 available to the world outside container
 EXPOSE 3000
 
