@@ -12,7 +12,9 @@ RUN  mvn clean package
 FROM openjdk:16-jdk-alpine
 
 # Set volume point to /tmp
+
 VOLUME /tmp
+WORKDIR /tmp
 RUN mkdir ./tmp/product-images
 # Make port 8080 available to the world outside container
 EXPOSE 3000
@@ -20,11 +22,11 @@ EXPOSE 3000
 #RUN pwd /mvnw package
 
 # Set application's JAR file
-ARG JAR_FILE=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar
-
+# ARG JAR_FILE=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar
+COPY --from=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar /tmp
 # Add the application's JAR file to the container
-ADD ${JAR_FILE} app.jar
+# ADD ${JAR_FILE} app.jar
 
 # Run the JAR file
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/int222-0.0.1-SNAPSHOT.jar"]
 
