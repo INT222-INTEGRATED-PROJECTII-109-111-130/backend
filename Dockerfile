@@ -27,6 +27,7 @@ COPY --from=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar /tmp
 # Add the application's JAR file to the container
 # ADD ${JAR_FILE} app.jar
 
+
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "int222-0.0.1-SNAPSHOT.jar"]
 
