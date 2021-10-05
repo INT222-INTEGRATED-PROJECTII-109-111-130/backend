@@ -34,4 +34,4 @@ jobs:
         port: ${{ secrets.PORT }}
         script: | 
           docker pull ghcr.io/violet-evergardenz/int222-backend:latest
-          docker-compose --build -d
+          docker-compose up -d
