@@ -20,3 +20,18 @@ jobs:
         with:
           push: true
           tags: ghcr.io/violet-evergardenz/int222-backend:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOSTNAME }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          docker-compose -f docker-compose.yml pull
+          docker-compose -f docker-compose.yml up --build -d
