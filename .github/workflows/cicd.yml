@@ -35,5 +35,5 @@ jobs:
         script: | 
           docker pull ghcr.io/violet-evergardenz/int222-backend:latest
           cd backend
-          dit pull
+          git pull
           docker-compose up -d
