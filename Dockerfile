@@ -28,5 +28,5 @@ COPY --from=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar /tmp
 # ADD ${JAR_FILE} app.jar
 
 # Run the JAR file
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/int222-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/int222-0.0.1-SNAPSHOT.jar"]
 
