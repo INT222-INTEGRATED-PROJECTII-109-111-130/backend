@@ -23,10 +23,10 @@ EXPOSE 3000
 
 # Set application's JAR file
 # ARG JAR_FILE=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar
-COPY --from=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar /tmp
+COPY --from=MAVENS /build/target/int222-0.0.1-SNAPSHOT.jar /usr/local/lib/demo.jar
 # Add the application's JAR file to the container
 # ADD ${JAR_FILE} app.jar
 
 # Run the JAR file
-ENTRYPOINT ["java", "-jar", "/int222-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/usr/local/lib/demo.jar"]
 
