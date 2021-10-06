@@ -4,7 +4,7 @@ services:
         container_name: "backend"
         image: ghcr.io/violet-evergardenz/int222-backend:latest
         volumes:
-            - /home/bluzeadmin/backend/product-images:/tmp
+            - /home/bluzeadmin/backend/product-images:/tmp/product-images
         ports:
             - "3000:3000"
         restart: on-failure
