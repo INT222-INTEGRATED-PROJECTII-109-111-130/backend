@@ -9,8 +9,8 @@ COPY src /build/src/
 WORKDIR /build/
 RUN  mvn clean package
 
-# FROM openjdk:16-jdk-alpine
-FROM adoptopenjdk/openjdk11:latest
+FROM openjdk:16-jdk-alpine
+# FROM adoptopenjdk/openjdk11:latest
 # Set volume point to /tmp
 
 VOLUME /tmp
