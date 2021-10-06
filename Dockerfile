@@ -9,13 +9,13 @@ COPY src /build/src/
 WORKDIR /build/
 RUN  mvn clean package
 
-FROM openjdk:16-jdk-alpine
-
+# FROM openjdk:16-jdk-alpine
+FROM adoptopenjdk/openjdk11:latest
 # Set volume point to /tmp
 
 VOLUME /tmp
-WORKDIR /tmp
-RUN mkdir /tmp/product-images
+# WORKDIR /tmp
+# RUN mkdir /tmp/product-images
 # Make port 8080 available to the world outside container
 EXPOSE 3000
 
