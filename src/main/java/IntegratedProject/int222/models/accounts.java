@@ -1,12 +1,18 @@
 package IntegratedProject.int222.models;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class accounts {
+public class accounts  {
   @Id
   private long accountId;
   private String firstName;
@@ -15,13 +21,15 @@ public class accounts {
   private String password;
   private String accountRole;
 
-  public accounts(long accountId, String firstName, String lastName, String email, String password, String accountRole) {
+  public accounts(long accountId, String firstName, String lastName
+          , String email, String password, String accountRole) {
     this.accountId = accountId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.accountRole = accountRole;
+
   }
 
   @OneToMany(mappedBy = "accounts")
@@ -30,6 +38,7 @@ public class accounts {
   public accounts() {
 
   }
+
 
   public List<cart> getCarts() {
     return carts;

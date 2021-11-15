@@ -140,6 +140,16 @@ public class RestControllers {
         products p =  prodRepo.findById(id).get();
         return p;
     }
+
+    @GetMapping("/1acc/{id}")
+    public accounts s1a(@PathVariable long id){
+        if (accRepo.findById(id).orElse(null) == null ){
+            throw  new MessageException("id: "+ id + " does not exist !!");
+        }
+        accounts p =  accRepo.findById(id).get();
+        return p;
+    }
+
     /* END */
     /* POST */
 
@@ -234,8 +244,22 @@ public class RestControllers {
             if(account != null){
                 account.setFirstName(acc.getFirstName());
                 account.setLastName(acc.getLastName());
+                accRepo.save(account);
             }
+
         }
+
+        @PutMapping("/updateroleacc")
+        public void updateRoleAccount(@RequestBody accounts acc){
+            accounts account = accRepo.findById(acc.getAccountId()).orElse(null);
+            if(account != null){
+
+                account.setAccountRole(acc.getAccountRole());
+                accRepo.save(account);
+            }
+
+        }
+
 
         /*method เปลี่ยน pass */
 
