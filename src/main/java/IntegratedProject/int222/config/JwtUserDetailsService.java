@@ -32,7 +32,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 //        System.out.println(user.getUsername());
 //        System.out.println(user.getPassword());
 //               return  user;
-        accounts user = acc.findByEmail(username).get();
+        accounts user = acc.findByEmail(username);
         System.out.println(user.getEmail());
         System.out.println(user.getPassword());
         if (user == null) {

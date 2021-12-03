@@ -43,7 +43,7 @@ public class JwtAuthenticationController {
     private PasswordEncoder bcryptEncoder;
 
     public long idacc;
-
+    public accounts a;
     @GetMapping("/alluser")
     public List<accounts> getUser(){
         return accRepo.findAll();
@@ -61,8 +61,8 @@ public class JwtAuthenticationController {
                 .loadUserByUsername(authenticationRequest.getUsername());
         System.out.println("3");
         final String token = jwtTokenUtil.generateToken(userDetails);
-        System.out.println(accRepo.findByEmail(authenticationRequest.getUsername()).get().getAccountId());
-        return ResponseEntity.ok(new JwtResponse(token,accRepo.findByEmail(authenticationRequest.getUsername()).get().getAccountId()));
+        System.out.println(accRepo.findByEmail(authenticationRequest.getUsername()).getAccountId());
+        return ResponseEntity.ok(new JwtResponse(token,accRepo.findByEmail(authenticationRequest.getUsername()).getAccountId()));
     }
 
     private void authenticate(String username, String password) throws Exception {
@@ -79,7 +79,11 @@ public class JwtAuthenticationController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> saveUser(@RequestBody accounts acc) throws RuntimeException {
-        if(accRepo.findByEmail(acc.getEmail()).orElse(null) != null && accRepo.findByEmail(acc.getEmail()).orElse(null).getEmail() == acc.getEmail()  ){
+        System.out.println(acc.getEmail());
+//        this.a = accRepo.findByEmail(acc.getEmail());
+//        System.out.println(this.a.getEmail());
+
+        if(accRepo.findByEmail(acc.getEmail()) != null){
             throw  new MessageException("Is have already email exist");
         }else {
 

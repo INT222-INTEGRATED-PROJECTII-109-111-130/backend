@@ -169,23 +169,20 @@ public class RestControllers {
     }
 
     /* ยังไม่เสร็จ เช็คเงื่อนไขว่มีซ้ำไหม */
-    @PostMapping("/addaccount")
-    public void addAccount(@RequestBody accounts acc) {
-
-
-        if(accRepo.findByEmail(acc.getEmail()).orElse(null) != null && accRepo.findByEmail(acc.getEmail()).orElse(null).getEmail() == acc.getEmail()  ){
-            throw  new MessageException("Is have already email exist");
-        }else {
-
-            this.idacc = accRepo.findAll().size()-1 == -1? 300001: accRepo.findAll().get(accRepo.findAll().size()-1).getAccountId()+1;
-            accounts accnew = new accounts(this.idacc,acc.getFirstName(),acc.getLastName(),acc.getEmail(),acc.getPassword(),acc.getAccountRole());
-
-            accRepo.save(accnew);
-        };
-
-
-
-    }
+//    @PostMapping("/addaccount")
+//    public void addAccount(@RequestBody accounts acc) {
+//
+//
+//        if(accRepo.findByEmail(acc.getEmail()).orElse(null) != null && accRepo.findByEmail(acc.getEmail()).orElse(null).getEmail() == acc.getEmail()  ){
+//            throw  new MessageException("Is have already email exist");
+//        }else {
+//
+//            this.idacc = accRepo.findAll().size()-1 == -1? 300001: accRepo.findAll().get(accRepo.findAll().size()-1).getAccountId()+1;
+//            accounts accnew = new accounts(this.idacc,acc.getFirstName(),acc.getLastName(),acc.getEmail(),acc.getPassword(),acc.getAccountRole());
+//
+//            accRepo.save(accnew);
+//        };
+//    }
     /* END */
 
     @PostMapping("/addcart")
