@@ -15,8 +15,8 @@ networks:
     default:
         external:
             name: project2-net
-        ipam:
-            config:
-                - subnet: 172.21.0.0/16
+#        ipam:
+#            config:
+#                - subnet: 172.21.0.0/16
 #    project2-net:
 #        external: true
