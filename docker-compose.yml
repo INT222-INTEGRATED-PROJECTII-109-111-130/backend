@@ -8,6 +8,9 @@ services:
         ports:
             - "3000:3000"
         restart: on-failure
+        networks:
+            project2-net:
+                ipv4_address: 172.21.0.3
 networks:
     default:
         external:
