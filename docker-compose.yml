@@ -8,15 +8,7 @@ services:
         ports:
             - "3000:3000"
         restart: on-failure
-        networks:
-            project2-net:
-                ipv4_address: 172.21.0.3
 networks:
     default:
         external:
             name: project2-net
-#        ipam:
-#            config:
-#                - subnet: 172.21.0.0/16
-#    project2-net:
-#        external: true
