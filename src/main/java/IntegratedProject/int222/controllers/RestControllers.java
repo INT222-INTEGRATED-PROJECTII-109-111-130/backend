@@ -160,11 +160,17 @@ public class RestControllers {
 
     @PostMapping("/addbrand")
     public void addBrand(@RequestBody brands bname) {
+        bname.setBrandId(bname.getBrandId()== 1 ?
+                brandRepo.findAll().size()-1 == -1? 1:
+                        brandRepo.findAll().get(brandRepo.findAll().size()-1).getBrandId()+1 : 1);
         brandRepo.save(bname);
     }
 
     @PostMapping("/addcolor")
     public void addColor(@RequestBody colors color) {
+        color.setColorId(color.getColorId() == 1 ?
+                colorRepo.findAll().size()-1 == -1? 1:
+                        colorRepo.findAll().get(colorRepo.findAll().size()-1).getColorId()+1 : 1);
         colorRepo.save(color);
     }
 
