@@ -7,8 +7,8 @@ public interface ProductcolorRepository extends JpaRepository<productcolor, Long
 
     productcolor[] findAllByProductId(Long longs);
     void deleteByProductId(Long longs);
-
-
+    productcolor[] findAllByColorId(Long longs);
+    void deleteAllByColorId(Long longs);
 
 
 

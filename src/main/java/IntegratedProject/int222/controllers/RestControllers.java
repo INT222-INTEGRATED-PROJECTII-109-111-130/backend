@@ -446,7 +446,43 @@ public class RestControllers {
 
         @DeleteMapping("/delbrand/{id}")
         public void deleteBrandById(@PathVariable long id){
+            products[] prod = prodRepo.findAllByProductId(id);
+            if(prod.length != 0 ){
+                throw new MessageException("The brand code cannot be removed because the product is currently using this brand. ");
+            }else{
             brandRepo.deleteById(id);
+            }
+        }
+
+        @DeleteMapping("/cdelbrand/{id}")
+        public void confirmDelBrand(@PathVariable long bid) throws IOException {
+            products[] prod1 = prodRepo.findAllByProductId(bid);
+            for (int i = 0; i < prod1.length; i++) {
+                Long run = prod1[i].getProductId();
+                System.out.println(run);
+                productcolor[] prodColor = prodcolorRepo.findAllByProductId(run);
+                cart[] cart = cartRepo.findAllByProductId(run);
+                productsize[] prodsize = prodsizeRepo.findAllByProductId(run);
+                products prod = prodRepo.findById(run).orElse(null);
+                if(prod != null){
+                    storageService.delete(prod.getProductImage());
+                }else{
+                    throw new MessageException("does not have id : "+run);
+                }
+
+                for (int a = 0; a < cart.length; a++) {
+                    cartRepo.deleteById(cart[a].getCartId());
+                }
+                for (int b = 0; b < prodColor.length; b++) {
+                    prodcolorRepo.deleteById(prodColor[b].getProductcolorId());
+                }
+                for (int c = 0; c < prodsize.length; c++) {
+                    prodsizeRepo.deleteById(prodsize[c].getProductsizeId());
+                }
+                prodRepo.deleteById(run);
+            }
+            prodRepo.deleteAllByBrandId(bid);
+            brandRepo.deleteById(bid);
         }
 
         @DeleteMapping("/delcart/{id}")
@@ -457,6 +493,18 @@ public class RestControllers {
 
         @DeleteMapping("/delcolor/{id}")
         public void deleteColorById(@PathVariable long id){
+            productcolor[] prodColor = prodcolorRepo.findAllByColorId(id);
+            if(prodColor.length != 0 ){
+                throw new MessageException("The color code cannot be removed because the product is currently using this color. ");
+            }else{
+                colorRepo.deleteById(id);
+            }
+
+        }
+
+        @DeleteMapping("/cdelcolor/{id}")
+        public void confirmDelCol(@PathVariable long id){
+            prodcolorRepo.deleteAllByColorId(id);
             colorRepo.deleteById(id);
         }
 
