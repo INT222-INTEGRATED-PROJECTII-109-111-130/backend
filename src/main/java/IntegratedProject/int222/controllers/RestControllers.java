@@ -452,7 +452,7 @@ public class RestControllers {
 
         @DeleteMapping("/delbrand/{id}")
         public void deleteBrandById(@PathVariable long id){
-            products[] prod = prodRepo.findAllByProductId(id);
+            products[] prod = prodRepo.findAllByBrandId(id);
             if(prod.length != 0 ){
                 throw new MessageException("The brand code cannot be removed because the product is currently using this brand. ");
             }else{
