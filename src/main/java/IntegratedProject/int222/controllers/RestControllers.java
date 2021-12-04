@@ -460,7 +460,7 @@ public class RestControllers {
             }
         }
 
-        @DeleteMapping("/cdelbrand/{id}")
+        @DeleteMapping("/cdelbrand/{bid}")
         public void confirmDelBrand(@PathVariable long bid) throws IOException {
             products[] prod1 = prodRepo.findAllByBrandId(bid);
             for (int i = 0; i < prod1.length; i++) {
