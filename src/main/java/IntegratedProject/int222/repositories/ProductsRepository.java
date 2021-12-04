@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductsRepository extends JpaRepository<products, Long> {
     products[] findAllByProductId(Long longs);
-    void deleteAllByBrandId(Long longs);
+    products[] findAllByBrandId(Long longs);
+//    void deleteAllByBrandId(Long longs);
 
 }

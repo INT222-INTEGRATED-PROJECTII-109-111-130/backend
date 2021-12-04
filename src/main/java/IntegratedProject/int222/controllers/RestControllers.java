@@ -462,7 +462,7 @@ public class RestControllers {
 
         @DeleteMapping("/cdelbrand/{id}")
         public void confirmDelBrand(@PathVariable long bid) throws IOException {
-            products[] prod1 = prodRepo.findAllByProductId(bid);
+            products[] prod1 = prodRepo.findAllByBrandId(bid);
             for (int i = 0; i < prod1.length; i++) {
                 Long run = prod1[i].getProductId();
                 System.out.println(run);
@@ -487,7 +487,11 @@ public class RestControllers {
                 }
                 prodRepo.deleteById(run);
             }
-            prodRepo.deleteAllByBrandId(bid);
+//            productcolor[] pc =  prodcolorRepo.findAllByColorId(id);
+//            for (int i = 0; i < pc.length; i++) {
+//                prodcolorRepo.deleteById(pc[i].getProductcolorId());
+//            }
+//            prodRepo.deleteAllByBrandId(bid);
             brandRepo.deleteById(bid);
         }
 
@@ -510,7 +514,10 @@ public class RestControllers {
 
         @DeleteMapping("/cdelcolor/{id}")
         public void confirmDelCol(@PathVariable long id){
-            prodcolorRepo.deleteAllByColorId(id);
+            productcolor[] pc =  prodcolorRepo.findAllByColorId(id);
+            for (int i = 0; i < pc.length; i++) {
+                prodcolorRepo.deleteById(pc[i].getProductcolorId());
+            }
             colorRepo.deleteById(id);
         }
 

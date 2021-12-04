@@ -73,7 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular request
 //                ,"/1acc/{id}"
                 .authorizeRequests().antMatchers("/authenticate", "/register","/listfileupload","/files/{filename:.+}"
-                        ,"/showcart/{id}","/showallbrand","/showcart/{id}","/showallcolor","/showallsize","/showallprodcolor","/showallproduct","/show1prod/{id}").permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().
+                        ,"/showcart/{id}","/showallbrand","/showcart/{id}","/showallcolor","/showallsize","/showallprodcolor","/showallproduct","/show1prod/{id}")
+                .permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
